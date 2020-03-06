@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { CardList } from './components/card-list/card-list.component';
-
+import { SearchBox } from './components/search-box/search-box.component';
 import './App.css';
 
 class App extends Component {
@@ -9,9 +9,16 @@ class App extends Component {
     super();
 
     this.state = {
-      monsters: []
+      monsters: [],
+      searchField: ''
     };
+
+    // this.handleChange = this.handleChange.bind(this);
   }
+
+  handleChange = e => {
+    this.setState({ searchField: e.target.value });
+  };
 
   componentDidMount() {
     fetch('https://jsonplaceholder.typicode.com/users')
@@ -20,9 +27,15 @@ class App extends Component {
   }
 
   render() {
+    const { monsters, searchField } = this.state;
+    const filteredMosters = monsters.filter(monster =>
+      monster.name.toLowerCase().includes(searchField.toLowerCase())
+    );
     return (
       <div className="App">
-        <CardList monsters={this.state.monsters}></CardList>
+        <h1>Monster Roladex</h1>
+        <SearchBox handleChange={this.handleChange} />
+        <CardList monsters={filteredMosters}></CardList>
       </div>
     );
   }
